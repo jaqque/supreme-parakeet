@@ -1,0 +1,38 @@
+#!/usr/bin/zsh
+# vim:sw=2
+
+autoload zcalc
+float s
+
+Cx=0         # center x coord
+Cy=0         # center y coord
+r=100        # radius
+s=16         # number of steps/points to plot
+n="Outline"  # name of area
+
+i=0 # index
+while [[ i -lt s ]]; do
+  zcalc -e 'x=Cx + r * cos( i/s * 2*PI )' > /dev/null
+  zcalc -e 'y=Cy + r * sin( i/s * 2*PI )' > /dev/null
+  exec >"$n-$i.json"
+  printf '{'
+  printf '"%s":"%s",' \
+    id $n-$i \
+    name "$n $i" \
+    icon waypoint-normal.png \
+    x $(( int(x) )) \
+    y 73 \
+    z $(( int(y) )) \
+    r 255 \
+    g 0 \
+    b 0 \
+    enable true \
+    type Normal \
+    origin journeymap \
+    persistent true
+  printf '"dimensions":[0]}\n'
+  : $(( i++ ))
+done
+
+
+
